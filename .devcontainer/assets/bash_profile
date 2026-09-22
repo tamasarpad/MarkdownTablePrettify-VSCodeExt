@@ -1,0 +1,5 @@
+# Agent devcontainer .bash_profile (seeded by post-create.sh).
+# Login shells (bash -l, used by `docker exec ... bash -l`) read this; delegate to
+# .bashrc so login and non-login shells share one config. No nvm — single Node
+# runtime; PATH comes from the image ENV plus the guard in .bashrc.
+[ -f ~/.bashrc ] && . ~/.bashrc

@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "defaultMode": "bypassPermissions"
+  },
+  "env": {
+    "ENABLE_CLAUDEAI_MCP_SERVERS": "false"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccstatusline@latest",
+    "padding": 0
+  },
+  "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
+  "remoteControlAtStartup": false,
+  "autoCompactEnabled": false,
+  "fileCheckpointingEnabled": false,
+  "useAutoModeDuringPlan": true,
+  "preferredNotifChannel": "notifications_disabled",
+  "terminalProgressBarEnabled": true,
+  "verbose": true,
+  "theme": "light"
+}

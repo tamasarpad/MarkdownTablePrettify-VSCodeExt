@@ -1,0 +1,22 @@
+# Agent devcontainer .bashrc (seeded by post-create.sh into the agent home).
+# Minimal: the image's ENV already sets PATH (NPM_CONFIG_PREFIX/bin and
+# ~/.local/bin). No nvm here — single Node runtime keeps things simple.
+
+# Belt-and-suspenders: ensure agent tool locations are on PATH for any shell.
+case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ;;
+    *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
+
+# Interactive niceties only below this line
+case $- in *i*) ;; *) return ;; esac
+
+export HISTSIZE=10000
+export HISTCONTROL=ignoreboth
+shopt -s histappend checkwinsize 2>/dev/null
+
+alias ll='ls -alF'
+alias la='ls -A'
+
+# Simple prompt: user@host:cwd (git branch shown via ccstatusline in Claude Code)
+PS1='\[\033[0;32m\]\h\[\033[0m\]:\[\033[0;34m\]\w\[\033[0m\]\$ '
