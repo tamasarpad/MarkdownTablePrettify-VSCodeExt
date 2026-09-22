@@ -1,5 +1,6 @@
 **/*.map
 .github/**
+.devcontainer/**
 .gitignore
 .travis.yml
 .vscode-test/**

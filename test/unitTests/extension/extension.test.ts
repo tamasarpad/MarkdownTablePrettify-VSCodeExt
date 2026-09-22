@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as vscode from 'vscode';
 
 suite("Extension Tests", () => {
-    const _extensionName = "darkriszty.markdown-table-prettify";
+    const _extensionName = "tamasarpad.markdown-table-prettify-width";
 
     test("Extension exists", () => {
         assert.ok(vscode.extensions.getExtension(_extensionName));

@@ -24,6 +24,7 @@ import { TableAtCursorPrettyfier } from "../prettyfiers/tableAtCursorPrettyfier"
 import { SingleTablePrettyfier } from '../prettyfiers/singleTablePrettyfier';
 import { TableStringWriter } from "../writers/tableStringWriter";
 import { ValuePaddingProvider } from '../writers/valuePaddingProvider';
+import { TableWidthLimiter } from '../prettyfiers/tableWidthLimiter';
 
 let cachedMultiTablePrettyfier: MultiTablePrettyfier | null = null;
 let cachedTableAtCursorPrettyfier: TableAtCursorPrettyfier | null = null;
@@ -57,10 +58,11 @@ function getMultiTablePrettyfier(): MultiTablePrettyfier {
     const loggers = getLoggers();
     const sizeLimitCheker = getSizeLimitChecker(loggers);
     const columnPadding: number = getConfigurationValue<number>("columnPadding", 0);
+    const wrapColumn: number = getConfigurationValue<number>("wrapColumn", 0);
 
     cachedMultiTablePrettyfier = new MultiTablePrettyfier(
         new TableFinder(new TableValidator(new SelectionInterpreter(true))),
-        getSingleTablePrettyfier(loggers, sizeLimitCheker, columnPadding),
+        getSingleTablePrettyfier(loggers, sizeLimitCheker, columnPadding, wrapColumn),
         sizeLimitCheker
     );
 
@@ -75,16 +77,17 @@ export function getTableAtCursorPrettyfier(): TableAtCursorPrettyfier {
     const loggers = getLoggers();
     const sizeLimitChecker = getSizeLimitChecker(loggers);
     const columnPadding = getConfigurationValue<number>("columnPadding", 0);
+    const wrapColumn = getConfigurationValue<number>("wrapColumn", 0);
 
     cachedTableAtCursorPrettyfier = new TableAtCursorPrettyfier(
         new TableFinder(new TableValidator(new SelectionInterpreter(true))),
-        getSingleTablePrettyfier(loggers, sizeLimitChecker, columnPadding)
+        getSingleTablePrettyfier(loggers, sizeLimitChecker, columnPadding, wrapColumn)
     );
 
     return cachedTableAtCursorPrettyfier;
 }
 
-function getSingleTablePrettyfier(loggers: ILogger[], sizeLimitCheker: ConfigSizeLimitChecker, columnPadding: number): SingleTablePrettyfier {
+function getSingleTablePrettyfier(loggers: ILogger[], sizeLimitCheker: ConfigSizeLimitChecker, columnPadding: number, wrapColumn: number): SingleTablePrettyfier {
     return new SingleTablePrettyfier(
         new TableFactory(
             new AlignmentFactory(),
@@ -99,7 +102,8 @@ function getSingleTablePrettyfier(loggers: ILogger[], sizeLimitCheker: ConfigSiz
         )),
         new TableStringWriter(new ValuePaddingProvider(columnPadding)),
         loggers,
-        sizeLimitCheker
+        sizeLimitCheker,
+        new TableWidthLimiter(wrapColumn, columnPadding)
     );
 }
 
@@ -117,5 +121,5 @@ function getSizeLimitChecker(loggers: ILogger[]): ConfigSizeLimitChecker {
 }
 
 function getConfigurationValue<T>(key: string, defaultValue: T): T {
-    return vscode.workspace.getConfiguration("markdownTablePrettify").get(key, defaultValue);
+    return vscode.workspace.getConfiguration("markdownTablePrettifyWidth").get(key, defaultValue);
 }

@@ -10,15 +10,19 @@ export class Cell {
     }
 
     public getLength(): number {
+        return Cell.getDisplayWidth(this._value);
+    }
+
+    public static getDisplayWidth(value: string): number {
         let length: number = 0;
 
-        for (let i = 0, n = this._value.length; i < n; i++)
-            length += this.getCharDisplayLength(this._value.charAt(i));
+        for (let i = 0, n = value.length; i < n; i++)
+            length += Cell.getCharDisplayLength(value.charAt(i));
 
         return length;
     }
 
-    private getCharDisplayLength(character: string): number {
+    private static getCharDisplayLength(character: string): number {
         // handle the most probable zero-width characters
         if (/^[\u{200B}-\u{200F}\u{2060}-\u{2064}\u{FEFF}\u{034F}\u{061C}\u{00AD}]$/u.test(character))
             return 0;

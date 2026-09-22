@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext): void {
     // Invalidate cache when configuration changes
     context.subscriptions.push(
         vscode.workspace.onDidChangeConfiguration(event => {
-            if (event.affectsConfiguration("markdownTablePrettify")) {
+            if (event.affectsConfiguration("markdownTablePrettifyWidth")) {
                 invalidateCache();
             }
         })
@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext): void {
         );
     }
 
-    const tableAtCursorContextKey = "markdownTablePrettify.hasTableAtCursor";
+    const tableAtCursorContextKey = "markdownTablePrettifyWidth.hasTableAtCursor";
     const contextKeyUpdater = new TableAtCursorContextKeyUpdater(
         supportedLanguageIds,
         tableAtCursorContextKey,
@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
     void contextKeyUpdater.update(vscode.window.activeTextEditor);
 
-    const command = "markdownTablePrettify.prettifyTables";
+    const command = "markdownTablePrettifyWidth.prettifyTables";
     context.subscriptions.push(
         vscode.commands.registerTextEditorCommand(command, async textEditor => {
             if (supportedLanguageIds.includes(textEditor.document.languageId))
@@ -47,7 +47,7 @@ export function activate(context: vscode.ExtensionContext): void {
         })
     );
 
-    const formatTableCommand = "markdownTablePrettify.prettifyTableAtCursor";
+    const formatTableCommand = "markdownTablePrettifyWidth.prettifyTableAtCursor";
     context.subscriptions.push(
         vscode.commands.registerTextEditorCommand(formatTableCommand, async textEditor => {
             if (supportedLanguageIds.includes(textEditor.document.languageId)) {

@@ -50,4 +50,17 @@ suite("Document tests", () => {
         assert.strictEqual(document.getText(), expectedText);
     });
 
+    test("replaceTextInRange() can add lines and returns the inserted range", () => {
+        const document = new Document("before\nold one\nold two\nafter\n");
+
+        const insertedRange = document.replaceTextInRange(
+            new Range(1, 2),
+            "new one\nnew two\nnew three"
+        );
+
+        assert.strictEqual(document.getText(), "before\nnew one\nnew two\nnew three\nafter\n");
+        assert.strictEqual(insertedRange.startLine, 1);
+        assert.strictEqual(insertedRange.endLine, 3);
+    });
+
 });

@@ -1,15 +1,15 @@
 {
-  "name": "markdown-table-prettify",
-  "displayName": "Markdown Table Prettifier",
-  "description": "Transforms markdown tables to be more readable.",
-  "version": "4.1.0",
-  "publisher": "darkriszty",
+  "name": "markdown-table-prettify-width",
+  "displayName": "Markdown Table Prettifier — Width Limited",
+  "description": "Formats Markdown tables and wraps wide body cells into aligned continuation rows.",
+  "version": "4.1.0-width.1",
+  "publisher": "tamasarpad",
   "repository": {
     "type": "git",
-    "url": "https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt"
+    "url": "https://github.com/tamasarpad/MarkdownTablePrettify-VSCodeExt"
   },
   "bugs": {
-    "url": "https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt/issues"
+    "url": "https://github.com/tamasarpad/MarkdownTablePrettify-VSCodeExt/issues"
   },
   "icon": "assets/logo.png",
   "engines": {
@@ -32,41 +32,47 @@
       "type": "object",
       "title": "Markdown Table Prettifier Configuration",
       "properties": {
-        "markdownTablePrettify.showWindowMessages": {
+        "markdownTablePrettifyWidth.showWindowMessages": {
           "type": "boolean",
           "default": true,
           "description": "Whether or not show window messages."
         },
-        "markdownTablePrettify.maxTextLength": {
+        "markdownTablePrettifyWidth.maxTextLength": {
           "type": "integer",
           "default": 1000000,
           "description": "The maximum text length to apply formatting to."
         },
-        "markdownTablePrettify.extendedLanguages": {
+        "markdownTablePrettifyWidth.extendedLanguages": {
           "type": "array",
           "default": [],
           "description": "Additional VSCode language identifiers to register the formatter for. Eg: [ 'ruby' ]"
         },
-        "markdownTablePrettify.columnPadding": {
+        "markdownTablePrettifyWidth.columnPadding": {
           "type": "integer",
           "default": 0,
           "description": "The left and right padding value expressed in number of spaces."
+        },
+        "markdownTablePrettifyWidth.wrapColumn": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0,
+          "description": "Maximum display width of a physical table source line, including indentation, pipes, separators, and padding. Body-cell prose wraps into continuation rows when needed. Set to 0 to disable wrapping."
         }
       }
     },
     "commands": [
       {
-        "command": "markdownTablePrettify.prettifyTables",
+        "command": "markdownTablePrettifyWidth.prettifyTables",
         "title": "Prettify markdown tables"
       },
       {
-        "command": "markdownTablePrettify.prettifyTableAtCursor",
+        "command": "markdownTablePrettifyWidth.prettifyTableAtCursor",
         "title": "Prettify markdown table at cursor"
       }
     ],
     "keybindings": [
       {
-        "command": "markdownTablePrettify.prettifyTables",
+        "command": "markdownTablePrettifyWidth.prettifyTables",
         "key": "ctrl+alt+m",
         "mac": "cmd+alt+m",
         "when": "editorTextFocus && !editorReadonly && !inCompositeEditor"
@@ -75,8 +81,8 @@
     "menus": {
       "editor/context": [
         {
-          "command": "markdownTablePrettify.prettifyTableAtCursor",
-          "when": "markdownTablePrettify.hasTableAtCursor && editorTextFocus && !editorReadonly && !inCompositeEditor",
+          "command": "markdownTablePrettifyWidth.prettifyTableAtCursor",
+          "when": "markdownTablePrettifyWidth.hasTableAtCursor && editorTextFocus && !editorReadonly && !inCompositeEditor",
           "group": "1_modification@2"
         }
       ]

@@ -26,9 +26,18 @@ export class MultiTablePrettyfier {
         let tableSearchStartLine = 0;
 
         while ((tableRange = this._tableFinder.getNextRange(document, tableSearchStartLine)) != null) {
-            const formattedTable: string = this._singleTablePrettyfier.prettifyTable(document, tableRange);
-            document.replaceTextInRange(tableRange, formattedTable);
-            tableSearchStartLine = tableRange.endLine + 1;
+            const tablePrefixes = prefixes.slice(tableRange.startLine, tableRange.endLine + 1);
+            const prefixWidth = this._prefixStripper.getMaxDisplayWidth(tablePrefixes);
+            const formattedTable: string = prefixWidth > 0
+                ? this._singleTablePrettyfier.prettifyTable(document, tableRange, prefixWidth)
+                : this._singleTablePrettyfier.prettifyTable(document, tableRange);
+            const replacementRange = document.replaceTextInRange(tableRange, formattedTable);
+            const replacementPrefixes = this._prefixStripper.resizePrefixes(
+                tablePrefixes,
+                replacementRange.endLine - replacementRange.startLine + 1
+            );
+            prefixes.splice(tableRange.startLine, tableRange.endLine - tableRange.startLine + 1, ...replacementPrefixes);
+            tableSearchStartLine = replacementRange.endLine + 1;
         }
 
         return this._prefixStripper.restore(document.getText(), prefixes);

@@ -34,7 +34,7 @@ suite('TableAtCursorContextKeyUpdater tests', () => {
 
         assert.strictEqual(executedCommands.length, 1);
         assert.strictEqual(executedCommands[0].command, 'setContext');
-        assert.deepStrictEqual(executedCommands[0].args, ['markdownTablePrettify.hasTableAtCursor', false]);
+        assert.deepStrictEqual(executedCommands[0].args, ['markdownTablePrettifyWidth.hasTableAtCursor', false]);
     });
 
     test('update() caches repeated editor state and does not call setContext again', async () => {
@@ -58,7 +58,7 @@ suite('TableAtCursorContextKeyUpdater tests', () => {
 
         assert.strictEqual(executedCommands.length, 1);
         assert.strictEqual(executedCommands[0].command, 'setContext');
-        assert.deepStrictEqual(executedCommands[0].args, ['markdownTablePrettify.hasTableAtCursor', true]);
+        assert.deepStrictEqual(executedCommands[0].args, ['markdownTablePrettifyWidth.hasTableAtCursor', true]);
     });
 
     test('update() with changed line calls setContext again', async () => {
@@ -86,13 +86,13 @@ suite('TableAtCursorContextKeyUpdater tests', () => {
         await sut.update(textEditor.object);
 
         assert.strictEqual(executedCommands.length, 2);
-        assert.deepStrictEqual(executedCommands[1].args, ['markdownTablePrettify.hasTableAtCursor', false]);
+        assert.deepStrictEqual(executedCommands[1].args, ['markdownTablePrettifyWidth.hasTableAtCursor', false]);
     });
 
     function createSut(): TableAtCursorContextKeyUpdater {
         return new TableAtCursorContextKeyUpdater(
             ['markdown'],
-            'markdownTablePrettify.hasTableAtCursor',
+            'markdownTablePrettifyWidth.hasTableAtCursor',
             _tableAtCursorPrettyfier.object,
             executeCommand
         );

@@ -1,4 +1,55 @@
-# Markdown table prettifier
+# Markdown Table Prettifier — Width Limited
+
+This fork adds source-width-limited formatting for GFM pipe tables while retaining the upstream formatter's behavior when wrapping is disabled. The installable extension identifier is `tamasarpad.markdown-table-prettify-width`; it can be installed alongside `darkriszty.markdown-table-prettify`.
+
+## Width-limited tables
+
+Set `markdownTablePrettifyWidth.wrapColumn` to a positive integer such as `180`. If the normally aligned table would be wider, body-cell prose is split at safe whitespace boundaries and emitted as aligned continuation rows. A value of `0` (the default) disables wrapping and preserves upstream behavior.
+
+The limit includes indentation or Markdown prefixes, outer pipes, separators, alignment padding, and configured column padding. The formatter uses the same display-width calculation for allocation and output checks, including the upstream handling of wide CJK and zero-width characters.
+
+Headers are never split. Inline code, links, images, autolinks, escaped characters (including escaped pipes), and words without a safe break are kept intact. If a header, indivisible construct, or the table's minimum structure cannot fit, the formatter preserves it and allows the affected aligned table lines to exceed the configured limit rather than truncating content or producing invalid Markdown.
+
+Continuation rows are intentional physical GFM rows and will render as additional rows on GitHub. Existing rows are never inferred to be continuations or merged merely because their first cell is blank.
+
+### VS Code setup
+
+Use this settings example to select the fork as the Markdown formatter, enable VS Code's normal format-on-save path, and wrap tables at 180 display columns:
+
+```json
+{
+  "markdownTablePrettifyWidth.wrapColumn": 180,
+  "[markdown]": {
+    "editor.defaultFormatter": "tamasarpad.markdown-table-prettify-width",
+    "editor.formatOnSave": true
+  }
+}
+```
+
+No independent save listener is registered. `editor.formatOnSave` invokes the same document formatting provider as **Format Document**. Both that provider and the table-at-cursor command use the same width-limited table formatter.
+
+Fork-specific identifiers:
+
+- Extension: `tamasarpad.markdown-table-prettify-width`
+- Configuration namespace: `markdownTablePrettifyWidth`
+- Format-document command: `markdownTablePrettifyWidth.prettifyTables`
+- Table-at-cursor command: `markdownTablePrettifyWidth.prettifyTableAtCursor`
+- Cursor context key: `markdownTablePrettifyWidth.hasTableAtCursor`
+
+The cursor command remains available from the Command Palette and the table context menu. It changes only the recognized table containing the cursor, including when the cursor is on a continuation row, and does nothing outside tables or in ignored regions.
+
+### Build and install the fork
+
+```bash
+npm install
+npm run compile
+npx @vscode/vsce package --no-dependencies
+code --install-extension markdown-table-prettify-width-4.1.0-width.1.vsix
+```
+
+The repository test command is `npm test`; on a headless Linux host, run it as `xvfb-run -a npm test`.
+
+## Upstream project information
 
 [![Test Status](https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/darkriszty/MarkdownTablePrettify-VSCodeExt/actions)
 [![Visual Studio Code extension](https://vsmarketplacebadges.dev/version-short/darkriszty.markdown-table-prettify.svg)](https://marketplace.visualstudio.com/items?itemName=darkriszty.markdown-table-prettify)
@@ -32,6 +83,7 @@ Right-click on a table to access the context menu option `Prettify markdown tabl
 - The maximum texth length of a selection/entire document to consider for formatting. Default: 1M chars (limit does not apply from CLI or NPM).
 - Additional languages to support formatting for besides `markdown`. See possible configurable values [here](https://code.visualstudio.com/docs/languages/identifiers#_known-language-identifiers). Default: `[ ]`.
 - Column padding to make the columns more spaced out from each other. Default: `0` (no extra spacing/padding).
+- Maximum physical table source-line width (`markdownTablePrettifyWidth.wrapColumn`). Default: `0` (disabled); suggested value: `180`.
 - Keyboard shortcut to prettify the currently opened markdown document. Default: <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>M</kbd> (<kbd>CMD</kbd>+<kbd>ALT</kbd>+<kbd>M</kbd> on Mac).
 
 ## NPM

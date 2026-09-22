@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### 4.1.0-width.1
+
+- Add optional width-limited GFM table formatting through `markdownTablePrettifyWidth.wrapColumn`.
+- Wrap body-cell prose into aligned continuation rows while keeping Markdown constructs intact.
+- Support row-adding replacements across multiple tables and in the table-at-cursor command.
+- Give the fork distinct extension, command, context-key, and configuration identifiers so it can coexist with upstream.
+
 ## 4.1.0 - 2026-05-22
 ### Added
 - Issue #111: Added context menu option to prettify table at cursor without selection.

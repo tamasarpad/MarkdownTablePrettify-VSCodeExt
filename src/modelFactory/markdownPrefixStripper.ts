@@ -1,3 +1,5 @@
+import { Cell } from "../models/cell";
+
 export class MarkdownPrefixStripper {
 
     public strip(text: string): { strippedText: string; prefixes: string[] } {
@@ -24,6 +26,54 @@ export class MarkdownPrefixStripper {
         }
 
         return result.join("");
+    }
+
+    public getMaxDisplayWidth(prefixes: string[]): number {
+        return prefixes.reduce(
+            (maximum, prefix) => Math.max(maximum, Cell.getDisplayWidth(prefix)),
+            0
+        );
+    }
+
+    public resizePrefixes(prefixes: string[], lineCount: number): string[] {
+        if (prefixes.length === lineCount) {
+            return prefixes.slice();
+        }
+        if (lineCount <= 0) {
+            return [];
+        }
+
+        const result: string[] = [];
+        if (prefixes.length > 0) {
+            result.push(prefixes[0]);
+        }
+        if (lineCount > 1 && prefixes.length > 1) {
+            result.push(prefixes[1]);
+        }
+
+        const bodyPrefixes = prefixes.slice(2);
+        const continuationPrefix = this.mostCommonPrefix(bodyPrefixes.length > 0
+            ? bodyPrefixes
+            : prefixes.slice(1));
+        while (result.length < lineCount) {
+            result.push(continuationPrefix);
+        }
+
+        return result;
+    }
+
+    private mostCommonPrefix(prefixes: string[]): string {
+        if (prefixes.length === 0) {
+            return "";
+        }
+
+        const counts = new Map<string, number>();
+        for (const prefix of prefixes) {
+            counts.set(prefix, (counts.get(prefix) ?? 0) + 1);
+        }
+
+        return prefixes.reduce((mostCommon, prefix) =>
+            counts.get(prefix)! > counts.get(mostCommon)! ? prefix : mostCommon);
     }
 
     private detectPrefix(line: string): string {

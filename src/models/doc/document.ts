@@ -35,18 +35,14 @@ export class Document {
         }, "");
     }
 
-    public replaceTextInRange(range: Range, newText: string): void {
+    public replaceTextInRange(range: Range, newText: string): Range {
         const newLines = this.buildLines(newText);
-
-        if (range.endLine - range.startLine + 1 !== newLines.length) {
-            throw new Error("Unexpected range length of text to replace.");
-        }
 
         // preserve the EOL of the last line, as the newText does not have it
         newLines[newLines.length - 1].EOL = this.lines[range.endLine].EOL;
-        for (let i = range.startLine; i <= range.endLine; i++) {
-            this.lines[i] = newLines[i - range.startLine];
-        }
+        this.lines.splice(range.startLine, range.endLine - range.startLine + 1, ...newLines);
+
+        return new Range(range.startLine, range.startLine + newLines.length - 1);
     }
 
     private buildLines(text: string): Line[] {
